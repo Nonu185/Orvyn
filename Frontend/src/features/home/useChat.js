@@ -47,7 +47,7 @@ const useChat = () => {
 
   // --- Initialize socket (only while Home is mounted) ---
   useEffect(() => {
-    const newSocket = io('http://localhost:5173', {
+    const newSocket = io(import.meta.env.VITE_API_URL || 'https://orvyn-wzs8.onrender.com', {
       withCredentials: true,
       reconnectionAttempts: 5,      // stop retrying after 5 failed attempts
       reconnectionDelay: 2000,      // wait 2s between retries

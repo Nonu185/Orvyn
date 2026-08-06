@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import useChat from './useChat';
 
 // --- Icons ---
@@ -151,24 +152,33 @@ const Home = () => {
           )}
         </nav>
 
-        {/* User info */}
-        {user && (
-          <div className="p-3 border-t border-white/5 flex items-center justify-between">
-            <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg flex-1">
-              <div className="w-8 h-8 rounded-full bg-[#31b8c6] flex items-center justify-center text-xs font-bold text-black">
-                {user.username?.[0]?.toUpperCase()}
+        {/* User info or Login */}
+        <div className="p-3 border-t border-white/5 flex items-center justify-between">
+          {user ? (
+            <>
+              <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg flex-1">
+                <div className="w-8 h-8 rounded-full bg-[#31b8c6] flex items-center justify-center text-xs font-bold text-black">
+                  {user.username?.[0]?.toUpperCase()}
+                </div>
+                <span className="text-sm text-gray-400 truncate">{user.username}</span>
               </div>
-              <span className="text-s text-gray-400 truncate">{user.username}</span>
-            </div>
-            <button
-              onClick={logout}
-              title="Logout"
-              className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+              <button
+                onClick={logout}
+                title="Logout"
+                className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+              >
+                <LogoutIcon />
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="w-full px-4 py-2 text-sm text-center font-semibold text-black bg-[#31b8c6] rounded-lg hover:bg-[#28929e] transition-colors shadow-[0_0_8px_rgba(49,184,198,0.4)]"
             >
-              <LogoutIcon />
-            </button>
-          </div>
-        )}
+              Log In to Chat
+            </Link>
+          )}
+        </div>
       </aside>
 
       {/* ── Main Content ── */}
