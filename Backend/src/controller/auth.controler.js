@@ -93,7 +93,8 @@ export async function login(req, res) {
     const token = jwt.sign({id:user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:"1d"});
     res.cookie("token",token,{
       httpOnly:true,
-      sameSite:"lax",
+      secure: true,
+      sameSite:"none",
       maxAge:24 * 60 * 60 * 1000,
     });
 
@@ -148,8 +149,10 @@ export async function verifyEmail(req, res) {
   try {
     const { token } = req.query;
 
+    const frontendUrl = process.env.FRONTEND_URL || "https://orvyn-ochre.vercel.app";
+
     if (!token) {
-      return res.redirect("http://localhost:5173/invalid-link");
+      return res.redirect(`${frontendUrl}/invalid-link`);
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -157,26 +160,27 @@ export async function verifyEmail(req, res) {
     const user = await usermodel.findById(decoded.id);
 
     if (!user) {
-      return res.redirect("http://localhost:5173/invalid-link");
+      return res.redirect(`${frontendUrl}/invalid-link`);
     }
 
     if (user.verified) {
-      return res.redirect("http://localhost:5173/already-verified");
+      return res.redirect(`${frontendUrl}/already-verified`);
     }
 
     user.verified = true;
     await user.save();
 
-    return res.redirect("http://localhost:5173/email-verified");
+    return res.redirect(`${frontendUrl}/email-verified`);
 
   } catch (error) {
+    const frontendUrl = process.env.FRONTEND_URL || "https://orvyn-ochre.vercel.app";
 
     if (error.name === "TokenExpiredError") {
-      return res.redirect("http://localhost:5173/link-expired");
+      return res.redirect(`${frontendUrl}/link-expired`);
     }
 
     if (error.name === "JsonWebTokenError") {
-      return res.redirect("http://localhost:5173/invalid-link");
+      return res.redirect(`${frontendUrl}/invalid-link`);
     }
 
     console.error(error);
@@ -192,7 +196,11 @@ export async function verifyEmail(req, res) {
 // @access: Public
 export async function logout(req, res) {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
     return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
