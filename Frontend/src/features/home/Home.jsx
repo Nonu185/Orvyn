@@ -69,6 +69,7 @@ const Home = () => {
     setActiveChatId,
     messages,
     input,
+    isLoading,
     isSidebarLoading,
     isMobileMenuOpen,
     setIsMobileMenuOpen,
