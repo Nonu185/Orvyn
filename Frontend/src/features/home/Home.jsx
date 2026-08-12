@@ -73,6 +73,8 @@ const Home = () => {
     isSidebarLoading,
     isMobileMenuOpen,
     setIsMobileMenuOpen,
+    isAuthModalOpen,
+    setIsAuthModalOpen,
     messagesEndRef,
     textareaRef,
     handleInputChange,
@@ -92,6 +94,43 @@ const Home = () => {
           className="fixed inset-0 bg-black/60 z-40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
+      )}
+
+      {/* ── Auth Modal ── */}
+      {isAuthModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-[#111111] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
+            <button 
+              onClick={() => setIsAuthModalOpen(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <CloseIcon />
+            </button>
+            <div className="flex flex-col items-center text-center mt-2">
+              <div className="w-12 h-12 rounded-2xl bg-[#31b8c6]/10 border border-[#31b8c6]/20 flex items-center justify-center mb-4 text-[#31b8c6]">
+                <BotIcon />
+              </div>
+              <h2 className="text-xl font-bold text-white mb-2">Sign in Required</h2>
+              <p className="text-gray-400 text-sm mb-6">
+                Please log in or create an account to start chatting with the AI and unlock all features.
+              </p>
+              <div className="flex w-full gap-3">
+                <Link
+                  to="/login"
+                  className="flex-1 py-2.5 px-4 bg-[#31b8c6] text-black font-semibold rounded-xl hover:bg-[#28a0ac] transition-colors shadow-[0_0_15px_rgba(49,184,198,0.3)]"
+                >
+                  Log In
+                </Link>
+                <Link
+                  to="/register"
+                  className="flex-1 py-2.5 px-4 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ── Sidebar ── */}

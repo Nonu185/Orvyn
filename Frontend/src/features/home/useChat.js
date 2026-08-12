@@ -45,6 +45,8 @@ const useChat = () => {
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   // --- Initialize socket (only while Home is mounted) ---
   useEffect(() => {
     const newSocket = io(import.meta.env.VITE_API_URL || 'https://orvyn-wzs8.onrender.com', {
@@ -109,6 +111,11 @@ const useChat = () => {
   // --- Send message with optimistic update ---
   const handleSubmit = async (e) => {
     e?.preventDefault();
+    if (!user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    
     const trimmed = input.trim();
     if (!trimmed || isLoading) return;
 
@@ -153,6 +160,10 @@ const useChat = () => {
 
   // --- Start a new blank chat ---
   const handleNewChat = () => {
+    if (!user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
     setActiveChatId(null);
     setMessages([]);
     setInput('');
@@ -185,6 +196,8 @@ const useChat = () => {
     isSidebarLoading,
     isMobileMenuOpen,
     setIsMobileMenuOpen,
+    isAuthModalOpen,
+    setIsAuthModalOpen,
     messagesEndRef,
     textareaRef,
     handleInputChange,
