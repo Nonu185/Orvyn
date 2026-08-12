@@ -50,13 +50,13 @@ export async function generateResponse(messages){
 }
 //chat title generation
 export async function generatechatTitle(message){
-  const response = await mistralmodel.invoke([
+  const response = await geminimodel.invoke([
     new SystemMessage(` dont use " " this quates while generating the title you are a helpful assistant that generates concise titles for the chat conversations
       User will provide the first message of the conversation.
       You have to generate a title for the conversation in 2-4 words `),
     new HumanMessage(`generate title for the chat conversation : ${message}`),
   ]);
-  return response.text;
+  return response.content;
 }
     
 
