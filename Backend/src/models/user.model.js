@@ -22,7 +22,7 @@ import bcrypt from "bcryptjs";
         },
         verified:{
             type:Boolean,
-            default:false,
+            default:true,
         },
     },
     {timestamps:true},

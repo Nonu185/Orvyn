@@ -20,7 +20,7 @@ const Register = () => {
     e.preventDefault();
     try {
       await register(formData);
-      navigate('/login'); 
+      navigate('/login', { state: { message: "Registration successful! You can now log in." } }); 
     } catch (err) {
       console.error('Registration error:', err);
     }

@@ -32,20 +32,8 @@ export async function register(req, res) {
       username,
       email,
       password: hashedPass,
+      verified: true, // Auto verify users
     });
-
-    const emailtoken = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"10m"});
-    const verificationLink = `http://localhost:3000/api/auth/verify-email?token=${emailtoken}`;
-
-await sendEmails(
-  email,
-  "Verify your email",
-  `<p>Welcome to Orvyn ${username}</p>
-   <p>Verify your email to continue</p>
-   <p><a href="${verificationLink}">Click on the link to verify your email</a></p>`,
-  `Verify your email: ${verificationLink}`
-);
-      
     
 
     return res.status(201).json({
@@ -80,11 +68,6 @@ export async function login(req, res) {
     if(!user){
         return res.status(401).json({message:"User not found"});
     }
-    if (!user.verified) {
-    return res.status(403).json({
-        message: "Please verify your email first"
-    });
-}
     const isPasswordValid = await bcrypt.compare(password,user.password);
     if(!isPasswordValid){
         return res.status(401).json({message:"Invalid password"});
@@ -141,57 +124,7 @@ export async function getme(req, res) {
   }
 } 
 
-// 
-//@desc:Verify email
-//@route: GET /api/auth/verify-email
-//@access: Public
-
-export async function verifyEmail(req, res) {
-  try {
-    const { token } = req.query;
-
-    const frontendUrl = process.env.FRONTEND_URL || "https://orvyn-ochre.vercel.app";
-
-    if (!token) {
-      return res.redirect(`${frontendUrl}/invalid-link`);
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await usermodel.findById(decoded.id);
-
-    if (!user) {
-      return res.redirect(`${frontendUrl}/invalid-link`);
-    }
-
-    if (user.verified) {
-      return res.redirect(`${frontendUrl}/already-verified`);
-    }
-
-    user.verified = true;
-    await user.save();
-
-    return res.redirect(`${frontendUrl}/email-verified`);
-
-  } catch (error) {
-    const frontendUrl = process.env.FRONTEND_URL || "https://orvyn-ochre.vercel.app";
-
-    if (error.name === "TokenExpiredError") {
-      return res.redirect(`${frontendUrl}/link-expired`);
-    }
-
-    if (error.name === "JsonWebTokenError") {
-      return res.redirect(`${frontendUrl}/invalid-link`);
-    }
-
-    console.error(error);
-
-    return res.status(500).json({
-      message: "Internal Server Error"
-    });
-  }
-}
-
+// Removed verifyEmail function as verification is disabled
 // @desc: Logout user
 // @route: POST /api/auth/logout
 // @access: Public
