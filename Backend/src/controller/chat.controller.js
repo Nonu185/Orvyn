@@ -45,7 +45,8 @@ export async function chatController(req, res) {
         });
 
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+    console.error("Chat Controller Error:", error);
+    return res.status(500).json({ message: "Internal Server Error", error: error.message, stack: error.stack });
   }
 }
 //get all the chats of the user
