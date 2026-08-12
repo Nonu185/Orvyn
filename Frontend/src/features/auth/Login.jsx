@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useAuth } from './AuthContext';
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const successMessage = location.state?.message;
+  
   const { login, isLoading, error } = useAuth(); 
   const [formData, setFormData] = useState({
     email: '',
@@ -28,6 +31,11 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-black text-gray-200">
       <div className="bg-gray-900 border border-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold mb-6 text-center text-[#31b8c6]">Login</h2>
+        {successMessage && (
+          <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-2 rounded mb-4 text-center text-sm font-medium">
+            {successMessage}
+          </div>
+        )}
         {error && (
           <div className="bg-red-500/10 border border-red-500/50 text-red-500 px-4 py-2 rounded mb-4 text-center">
             {error}
