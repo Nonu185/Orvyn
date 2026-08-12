@@ -8,7 +8,7 @@ import { searchinternet } from "./Internet.service.js";
 
 //models
 const geminimodel = new ChatGoogleGenerativeAI({
-  model: "gemini-2.5-flash",
+  model: "gemini-1.5-flash",
   apiKey: process.env.GOOGLE_API_KEY
 });
 const mistralmodel = new ChatMistralAI({
