@@ -7,10 +7,7 @@ import * as z from 'zod';
 import { searchinternet } from "./Internet.service.js";
 
 //models
-const geminimodel = new ChatGoogleGenerativeAI({
-  model: "gemini-1.5-flash",
-  apiKey: process.env.GOOGLE_API_KEY
-});
+//models
 const mistralmodel = new ChatMistralAI({
   model: "mistral-small-latest",
   apiKey: process.env.MISTRAL_API_KEY,
@@ -27,7 +24,7 @@ const searchinternettool = tool(searchinternet,{
 
 //agents
 const agent = createReactAgent({
-  llm: geminimodel,
+  llm: mistralmodel,
   tools:[searchinternettool],
 })
 
@@ -50,7 +47,7 @@ export async function generateResponse(messages){
 }
 //chat title generation
 export async function generatechatTitle(message){
-  const response = await geminimodel.invoke([
+  const response = await mistralmodel.invoke([
     new SystemMessage(` dont use " " this quates while generating the title you are a helpful assistant that generates concise titles for the chat conversations
       User will provide the first message of the conversation.
       You have to generate a title for the conversation in 2-4 words `),
