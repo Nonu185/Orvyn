@@ -58,6 +58,9 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true);
       setError(null);
       const data = await authService.login(credentials);
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
+      }
       setUser(data.user || data);
       return data;
     } catch (err) {
@@ -74,6 +77,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error('Logout failed:', err);
     } finally {
+      localStorage.removeItem('authToken');
       setUser(null);
     }
   };
