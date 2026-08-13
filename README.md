@@ -11,13 +11,6 @@ A modern, full-stack AI chat application designed to provide detailed, AI-genera
 - Your **chat history** is saved and shown in the sidebar
 - Everything is connected with **real-time sockets** using Socket.IO
 
-## Project Structure
-
-```
-orvyn/
-├── Frontend/    → React app (the UI users see)
-└── Backend/     → Node.js server (handles APIs, AI, database)
-```
 
 ## Tech Stack
 
