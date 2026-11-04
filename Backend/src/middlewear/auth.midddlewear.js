@@ -3,12 +3,21 @@ import jwt from "jsonwebtoken";
 export async function authMiddleware(req, res, next) {
   try {
     let token = req.cookies?.token;
-  if (!token) {
+
+    // Fallback to Authorization header if cookie is not present
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = {
+      ...decoded,
+      id: decoded.id || decoded._id,
+    };
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
