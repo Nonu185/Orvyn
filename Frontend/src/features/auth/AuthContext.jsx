@@ -16,11 +16,18 @@ export const AuthProvider = ({ children }) => {
   // Check if the user is already authenticated on mount
   useEffect(() => {
     const fetchUser = async () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
       try {
         setIsLoading(true);
         const data = await authService.getme();
         setUser(data.user || data); 
       } catch (err) {
+        console.error("Failed to fetch user:", err);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -39,10 +46,10 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true);
       setError(null);
       const data = await authService.register(credentials);
-      setUser(data.user || data);
       return data;
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      const message = err.response?.data?.message || 'Registration failed';
+      setError(message);
       throw err;
     } finally {
       setIsLoading(false);
@@ -51,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
   /**
    * Log in an existing user
-   * @param {Object} credentials - { username, password }
+   * @param {Object} credentials - { email, password }
    */
   const login = async (credentials) => {
     try {
@@ -64,7 +71,8 @@ export const AuthProvider = ({ children }) => {
       setUser(data.user || data);
       return data;
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      const message = err.response?.data?.message || 'Login failed';
+      setError(message);
       throw err;
     } finally {
       setIsLoading(false);
@@ -96,7 +104,6 @@ export const AuthProvider = ({ children }) => {
 
 /**
  * Custom hook for components to access the authentication state and methods.
- * Provides user data, loading state, error state, and auth functions (register, login, logout).
  */
 export const useAuth = () => {
   const context = useContext(AuthContext);

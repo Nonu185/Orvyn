@@ -143,8 +143,11 @@ const useChat = () => {
       ]);
     } catch (err) {
       console.error('Failed to send message:', err);
-      // Roll back the optimistic message on error
+      // Roll back the optimistic message on error and restore input
       setMessages((prev) => prev.filter((m) => m._id !== optimisticUserMsg._id));
+      setInput(trimmed);
+      const errMsg = err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.';
+      alert(`Message could not be sent: ${errMsg}`);
     } finally {
       setIsLoading(false);
     }
